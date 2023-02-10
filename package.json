@@ -1,0 +1,41 @@
+{
+  "name": "express-boilerplate",
+  "version": "1.0.0",
+  "main": "dist/index.ts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon src/index.ts",
+    "lint": "eslint",
+    "test": "jest",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/index.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^4.10.1",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "passport": "^0.6.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.15",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.48.0",
+    "@typescript-eslint/parser": "^5.48.0",
+    "envalid": "^7.3.1",
+    "eslint": "^8.31.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.1",
+    "prisma": "^4.10.1",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.2",
+    "tsconfig-paths": "^4.1.2",
+    "typescript": "^4.9.4"
+  },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma",
+    "seed": "src/prisma/seed.ts"
+  }
+}
