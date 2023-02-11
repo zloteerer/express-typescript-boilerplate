@@ -1,33 +1,38 @@
-import express from "express";
-import { Express as NativeExpress, Request, Response } from "express";
+import express, { Response, Request } from "express";
+import { Express as NativeExpress } from "express";
 import { env } from "@providers";
+import { ErrorHandlerMiddleware } from "@middlewares";
 
 class Express {
-    private app: NativeExpress;
+    private express: NativeExpress;
 
     constructor() {
-        this.app = express();
-        this.middleware();
-        this.listen();
+        this.express = express();
+
+        this.middlewares();
+        this.routes();
+        this.handler();
     }
 
-    middleware = () => {
-        this.app.use(express.json());
-        this.app.use(express.urlencoded({ extended: true }));
+    public middlewares(): void {
+        this.express.use(express.json());
+        this.express.use(express.urlencoded({ extended: true }));
+    }
 
-        // this.app.use(env.API_ROUTE_PREFIX, routes);
-        this.app.all("*", (req: Request, res: Response) => {
-            return res.status(404).json("Not found");
-        });
-        // this.app.use(errorHandler);
-    };
+    public routes(): void {}
 
-    listen = () => {
-        this.app.listen(env.API_PORT, (err?: any) => {
+    public handler(): void {
+        ErrorHandlerMiddleware.catch(this.express);
+        this.express.use(ErrorHandlerMiddleware.logger);
+        this.express.use(ErrorHandlerMiddleware.handler);
+    }
+
+    public init(): void {
+        this.express.listen(env.API_PORT, (err?: any) => {
             if (err) throw err;
             console.log(`> Ready on ${env.API_HOST}:${env.API_PORT}`);
         });
-    };
+    }
 }
 
 export default Express;

@@ -1,8 +1,9 @@
 import { Express } from "@providers";
 
 (async () => {
+    const server = new Express();
     try {
-        new Express();
+        server.init();
     } catch (e) {
         console.error(e);
         process.exit(1);
