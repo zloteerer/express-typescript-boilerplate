@@ -7,6 +7,9 @@ config({
 });
 
 interface IEnvironment {
+    isProduction?: boolean;
+    isDevelopment?: boolean;
+    isTest?: boolean;
     NODE_ENV: string;
     API_HOST: string;
     API_PORT: number;
@@ -46,11 +49,11 @@ const api_port = makeValidator((x) => {
 });
 
 class Environment {
-    static env: Readonly<IEnvironment>;
+    static env: IEnvironment;
 
     static getVariables = () => {
-        if (this.env == null)
-            this.env = cleanEnv(process.env, {
+        if (this.env == null) {
+            this.env = <IEnvironment>cleanEnv(process.env, {
                 NODE_ENV: str({
                     choices: ["development", "production", "test"],
                 }),
@@ -67,6 +70,13 @@ class Environment {
                 SESSION_SECRET: str(),
                 COOKIE_DOMAIN: str({ default: "" }),
             });
+            this.env = {
+                ...this.env,
+                isProduction: this.env.NODE_ENV === "production",
+                isDevelopment: this.env.NODE_ENV === "development",
+                isTest: this.env.NODE_ENV === "test",
+            };
+        }
         return this.env;
     };
 }
