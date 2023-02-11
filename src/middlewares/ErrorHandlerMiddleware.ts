@@ -2,11 +2,12 @@ import { NextFunction, Request, Response } from "express";
 import { IException } from "@interfaces";
 import { Express } from "express";
 import { env } from "@providers";
+import { NotFoundException } from "@exceptions";
 
 class ErrorHandlerMiddleware {
     public catch(express: Express) {
-        express.all("*", (req: Request, res: Response) => {
-            return res.status(404).json("Not found");
+        express.all("*", (req: Request, res: Response, next: NextFunction) => {
+            next(new NotFoundException());
         });
     }
     public logger() {}
