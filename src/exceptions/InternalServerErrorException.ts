@@ -1,6 +1,6 @@
-import { IException } from "@interfaces";
+import { Exception } from "@exceptions";
 
-export class InternalServerErrorException extends IException {
+export class InternalServerErrorException extends Exception {
     constructor(message?: string) {
         super(500, message);
     }
