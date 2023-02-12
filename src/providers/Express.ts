@@ -1,7 +1,7 @@
-import express, { Response, Request } from "express";
+import express from "express";
 import { Express as NativeExpress } from "express";
-import { env } from "@providers";
 import { ErrorHandlerMiddleware } from "@middlewares";
+import { Logger, env, Morgan } from "@providers";
 
 class Express {
     private express: NativeExpress;
@@ -15,6 +15,8 @@ class Express {
     }
 
     public middlewares(): void {
+        this.express.use(Morgan.mount());
+
         this.express.use(express.json());
         this.express.use(express.urlencoded({ extended: true }));
     }
@@ -30,7 +32,7 @@ class Express {
     public init(): void {
         this.express.listen(env.API_PORT, (err?: any) => {
             if (err) throw err;
-            console.log(`> Ready on ${env.API_HOST}:${env.API_PORT}`);
+            Logger.info(`> Ready on ${env.API_HOST}:${env.API_PORT}`);
         });
     }
 }

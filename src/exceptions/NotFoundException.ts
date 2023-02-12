@@ -1,6 +1,6 @@
-import { IException } from "@interfaces";
+import { Exception } from "@exceptions";
 
-export class NotFoundException extends IException {
+export class NotFoundException extends Exception {
     constructor(message?: string) {
         super(404, message);
     }

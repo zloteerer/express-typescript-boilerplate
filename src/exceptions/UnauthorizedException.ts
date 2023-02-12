@@ -1,6 +1,6 @@
-import { IException } from "@interfaces";
+import { Exception } from "@exceptions";
 
-export class UnauthorizedException extends IException {
+export class UnauthorizedException extends Exception {
     constructor(message?: string) {
         super(401, message);
     }
