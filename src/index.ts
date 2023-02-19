@@ -1,20 +1,16 @@
 import { Express, Logger } from "@providers";
 
 (async () => {
-    process.on("uncaughtException", (exception) =>
-        Logger.error("uncaughtException", {
-            name: exception.name,
-            error: exception.message,
-            ...(exception.stack && { stack: exception.stack }),
-        }),
-    );
+    process.on("uncaughtException", (exception) => {
+        Logger.error("Stopping server due to error:", exception);
+        process.exit(1);
+    });
     process.on("warning", (warning) => Logger.warn(warning.stack));
 
-    const server = new Express();
     try {
-        server.init();
-    } catch (e) {
-        Logger.error(e);
+        new Express().listen();
+    } catch (err) {
+        Logger.error("Stopping server due to error:", err);
         process.exit(1);
     }
 })();

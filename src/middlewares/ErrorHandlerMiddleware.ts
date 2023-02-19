@@ -6,7 +6,7 @@ import { Express } from "express";
 class ErrorHandlerMiddleware {
     public catch(express: Express) {
         express.all("*", (req: Request, res: Response, next: NextFunction) => {
-            next(new NotFoundException("Not Found"));
+            next(new NotFoundException("This route does not exist."));
         });
     }
 

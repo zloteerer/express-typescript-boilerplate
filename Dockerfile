@@ -13,4 +13,4 @@ COPY . /var/express/
 
 RUN yarn prisma generate
 
-CMD ["yarn", "start"]
+CMD ["yarn", "dev"]
