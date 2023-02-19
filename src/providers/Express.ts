@@ -1,45 +1,65 @@
 import express from "express";
+import passport from "passport";
 import { Express as NativeExpress } from "express";
-import { ErrorHandlerMiddleware } from "@middlewares";
-import { Logger, env, Morgan } from "@providers";
+import {
+    ErrorHandlerMiddleware,
+    MorganMiddleware,
+    PassportMiddleware,
+    SessionMiddleware,
+} from "@middlewares";
+import { Logger, env, Redis } from "@providers";
 import { Server } from "http";
+import { Router } from "@routes";
 
 class Express {
-    private express: NativeExpress;
-    private server?: Server;
+    private _express: NativeExpress;
+    private _server?: Server;
 
     constructor() {
-        this.express = express();
+        this.init();
+
+        this._express = express();
 
         this.middlewares();
         this.routes();
         this.handler();
     }
 
-    public middlewares(): void {
-        this.express.use(Morgan.mount());
-
-        this.express.use(express.json());
-        this.express.use(express.urlencoded({ extended: true }));
+    public init() {
+        Redis.init();
     }
 
-    public routes(): void {}
+    public middlewares(): void {
+        this._express.use(express.json());
+        this._express.use(express.urlencoded({ extended: true }));
+
+        MorganMiddleware.mount(this._express);
+        PassportMiddleware.mount();
+        SessionMiddleware.mount(this._express);
+
+        this._express.use(passport.initialize());
+        this._express.use(passport.session());
+    }
+
+    public routes(): void {
+        this._express.use(env.API_ROUTE_PREFIX, Router.mount());
+    }
 
     public handler(): void {
-        ErrorHandlerMiddleware.catch(this.express);
-        this.express.use(ErrorHandlerMiddleware.logger);
-        this.express.use(ErrorHandlerMiddleware.handler);
+        ErrorHandlerMiddleware.catch(this._express);
+        this._express.use(ErrorHandlerMiddleware.logger);
+        this._express.use(ErrorHandlerMiddleware.handler);
     }
 
-    public init(): void {
-        this.server = this.express.listen(env.API_PORT, (err?: any) => {
+    public listen(): void {
+        this._server = this._express.listen(env.API_PORT, (err?: any) => {
             if (err) throw err;
             Logger.info(`> Ready on ${env.API_HOST}:${env.API_PORT}`);
         });
     }
 
     public close(): void {
-        if (this.server) this.server.close();
+        if (this._server) this._server.close();
     }
 }
 

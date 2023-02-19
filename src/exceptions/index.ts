@@ -5,6 +5,7 @@ import { InternalServerErrorException } from "./InternalServerErrorException";
 import { MethodNotAllowedException } from "./MethodNotAllowedException";
 import { NotFoundException } from "./NotFoundException";
 import { UnauthorizedException } from "./UnauthorizedException";
+import { ConflictException } from "./ConflictException";
 
 export {
     Exception,
@@ -14,4 +15,5 @@ export {
     MethodNotAllowedException,
     NotFoundException,
     UnauthorizedException,
+    ConflictException,
 };
